@@ -15,8 +15,8 @@ import com.sigmacult.blog.utils.DtoToPostConverter;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
 @Slf4j
+@Service
 public class PostRepoProcessor {
 	
 	@Autowired
@@ -57,14 +57,9 @@ public class PostRepoProcessor {
 	}
 	
 	public Post getPost(String id) {
-		log.info(id);
 		Post post = null;
-		try {
-			post = postRepo.findById(id).orElse(null);
-		} catch (Exception e) {
-			log.error("No such post found");
-		}
-		System.out.println(post == null);
+		post = postRepo.findById(id).orElse(null);
+		System.out.print(post.toString());
 		return post;
 	}
 	
@@ -76,6 +71,16 @@ public class PostRepoProcessor {
 			deletePost(id);
 		}
 		return createPost(postDto);
+	}
+	
+	public Post updatePost(String id, Post post) {
+		Post check = getPost(id);
+		if(check == null) {
+			log.info("Post doesn't exists, creating one");
+		} else {
+			check = postRepo.save(post);
+		}
+		return check;
 	}
 	
 	public List<Post> searchPostsByKeywords(String keywords){
